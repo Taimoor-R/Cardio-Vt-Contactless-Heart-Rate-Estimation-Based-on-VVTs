@@ -5,6 +5,7 @@ SCAMPS_test = ""
 PURE_train = ""
 PURE_test = ""
 UBFC = ""
+COHFACE = ""
 
 #Data Configs 
 DATASETS = {
