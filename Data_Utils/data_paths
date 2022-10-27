@@ -1,0 +1,28 @@
+
+#Dataset Paths
+SCAMPS_train = ""
+SCAMPS_test = ""
+PURE_train = ""
+PURE_test = ""
+UBFC = ""
+COHFACE = ""
+
+#Data Configs 
+DATASETS = {
+	'sythetic': {
+		'train_source': dataset_paths['SCAMPS_train'],
+		'test_source': dataset_paths['SCAMPS_test'],
+		'val_source': dataset_paths['SCAMPS_val'],
+	},
+	'real': {
+		'train_source': dataset_paths['PURE_train'],
+		'test_source': dataset_paths['PURE_test'],
+        'val_target': dataset_paths['UBFC'],	
+    },
+    'syth_real': {
+		
+		'train_source': dataset_paths['SCAMPS_train'],
+		'test_source': dataset_paths['SCAMPS_test'],
+		'val_source': dataset_paths['UBFC'],
+	}
+}
