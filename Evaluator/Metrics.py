@@ -1,3 +1,4 @@
+# Code inspired by https://github.com/ubicomplab/rPPG-Toolbox 
 import numpy as np
 import pandas as pd
 import torch
