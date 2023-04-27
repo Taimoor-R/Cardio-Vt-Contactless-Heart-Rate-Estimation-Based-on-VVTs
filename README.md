@@ -1,1 +1,3 @@
 # HR-VViT:Contactless Heart Rate Estimation Based on VViTs
+## Issues with Git and GPU Notebook intergration:
+I faced the issue of Paperspace not properly interacting with git speciffically private github projects, therefore all the commits have been added at a later date while uploading the project to github. Furthermore, due to the nature of the project and experimentation with mulitple models and creation of new model it was not possible to keep a updated git as the objective was not to create a frontend or backend ddevelopment project rather a research. Therefore, due to these reasons the git commits are limited, if required access to Paperspace notebook can be given to see history/images of notebook throughout the project.
