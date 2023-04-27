@@ -110,3 +110,20 @@ def calculate_metrics(predictions, labels, config):
 
         else:
             raise ValueError("Wrong Test Metric Type")
+
+def predict_calculate_metrics(predictions_batch):
+    """Calculate rPPG Metrics (MAE, RMSE, MAPE, Pearson Coef.) using FFT."""
+    predict_hr_fft_all = list()
+    prediction = predictions_batch
+    diff_flag_test = True
+    pred_hr_fft = calculate_prediction(
+        prediction, diff_flag=diff_flag_test, fs=30, hr_method='FFT')
+    #predict_hr_fft_all.append(pred_hr_fft)
+    pred_hr_peak = calculate_prediction(
+        prediction, diff_flag=diff_flag_test, fs=30, hr_method='Peak')
+    #predict_hr_fft_all.append(pred_hr_fft)    
+    predict_hr_fft_all = np.array(pred_hr_fft)
+    print("Predicted Heart Rate (FFT):", np.mean(predict_hr_fft_all))
+    predict_hr_peak_all = np.array(pred_hr_peak)
+    print("Predicted Heart Rate (FFT):", np.mean(predict_hr_peak_all))
+    return predict_hr_fft_all
