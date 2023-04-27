@@ -1,10 +1,4 @@
-"""The Base Class for data-loading.
-
-Provides a pytorch-style data-loader for end-to-end training pipelines.
-Extend the class to support specific datasets.
-Dataset already supported: UBFC, PURE, SCAMPS, and COHFACE.
-
-"""
+# Code adapted from https://github.com/ubicomplab/rPPG-Toolbox 
 import csv
 import glob
 import os
