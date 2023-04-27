@@ -1,3 +1,5 @@
+# The code for the transformer achitriture is inspired by works of https://github.com/facebookresearch/TimeSformer(Gedas Bertasius) and https://github.com/lucidrains/TimeSformer-pytorch(Phil Wang)
+
 import torch
 from torch import nn, einsum
 import torch.nn.functional as F
@@ -246,19 +248,8 @@ class TimeSformer(nn.Module):
         # calculate num patches in height and width dimension, and number of total patches (n)
         
         x = video.permute(0,2,1,3,4)
-        #print(video.shape)
         x = self.Stem0(x)
-        #print(x.shape)
-        #x = self.Stem1(x)
-        #print(x.shape)
-        #x = self.Stem2(x)
-        #print(x.shape)
-        #x = self.Stem3(x)
-        #print(x.shape)
-        #x = nn.functional.interpolate(x, size=(32,32,32), mode='trilinear', align_corners=False)
-        #print(video.shape)
         x = x.permute(0,2,1,3,4)
-        #print(x.shape)
         f = 32
         h = 32
         w = 32
@@ -305,23 +296,9 @@ class TimeSformer(nn.Module):
         
         x = x[:, 1:, :]
         x = self.to_unpatch_embedding(x)
-        x = rearrange(x, 'b (f h w) (p1 p2 c) -> b c f (h p1 w p2)', p1 = 8, p2 = 8, f = 32 , w =4 , h =4 )
-        #print(x.shape)
-        #x = nn.functional.interpolate(x, size=(32,128,128), mode='trilinear', align_corners=False)
-        #x = self.globalpool(x)
-        #print(x.shape)
-        #x = torch.mean(x,3)     # x [B, 32, 160, 4]  
-        x = torch.mean(x,3)     # x [B, 32, 160] 
-        #x = torch.squeeze(x, dim=3)
-        #x = torch.squeeze(x, dim=3)
-        #print(x.shape)
-        #x = x.permute(0,2,1)
-        #print(x.shape)
-        x = self.ConvBlockLast(x)    # x [B, 1, 160]
-        #print(x.shape)
-        #x = x.permute(0,2,1)
-        #print(x.shape)
+        x = rearrange(x, 'b (f h w) (p1 p2 c) -> b c f (h p1 w p2)', p1 = 8, p2 = 8, f = 32 , w =4 , h =4 )  
+        x = torch.mean(x,3) 
+        x = self.ConvBlockLast(x) 
         x = self.dropout(x)
         x = x.squeeze(1)
-        #x = self.mlp(x)
         return x 
