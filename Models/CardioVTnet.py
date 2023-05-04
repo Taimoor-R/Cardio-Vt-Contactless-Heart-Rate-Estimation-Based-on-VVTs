@@ -5,7 +5,7 @@ from torch import nn, einsum
 import torch.nn.functional as F
 from einops import rearrange, repeat
 
-from timesformer_pytorch.rotary import apply_rot_emb, AxialRotaryEmbedding, RotaryEmbedding
+from Models.rotary import apply_rot_emb, AxialRotaryEmbedding, RotaryEmbedding
 
 # helpers
 
@@ -150,7 +150,7 @@ class Attention(nn.Module):
 
 # main classes
 
-class TimeSformer(nn.Module):
+class CardioVTnet(nn.Module):
     def __init__(
         self,
         *,
@@ -202,7 +202,7 @@ class TimeSformer(nn.Module):
 
             self.layers.append(nn.ModuleList([time_attn, spatial_attn, ff]))
             
-        self.Stem0 = nn.Sequential(
+        self.CoarseFeatureCNN = nn.Sequential(
             nn.Conv3d(3, 32, [1, 3, 3], stride=(1, 1, 1), padding=[0,2,2]),
             nn.BatchNorm3d(32),
             nn.Dropout(0.6),
@@ -210,30 +210,9 @@ class TimeSformer(nn.Module):
             nn.MaxPool3d((1, 3, 3), stride=(1, 2, 2)),
         )
         
-        self.Stem1 = nn.Sequential(
-            nn.Conv3d(16, 32, [3, 5, 5], stride=1, padding=[1,2,2]),
-            nn.BatchNorm3d(32),
-            nn.Dropout(0.5),
-            nn.ReLU(inplace=True),
-            nn.MaxPool3d((1, 2, 2), stride=(1, 2, 2)),
-        )
-        
-        self.Stem2 = nn.Sequential(
-            nn.AvgPool3d(kernel_size=(1, 5, 5), stride=(1, 2, 2), padding=(0, 2, 2)),
-            nn.BatchNorm3d(3),
-            nn.Dropout(0.5),
-            nn.ReLU(inplace=True)
-        )
-        
-        self.Stem3 = nn.Sequential(
-            nn.AvgPool3d(kernel_size=(1, 5, 5), stride=(1, 2, 2), padding=(0, 2, 2)),
-            nn.BatchNorm3d(3),
-            nn.Dropout(0.5),
-            nn.ReLU(inplace=True)
-        )
-
-        self.globalpool = nn.AdaptiveAvgPool3d((32, 1, 1))
-        self.ConvBlockLast = nn.Conv1d(32, 1, 1,stride=1, padding=0)
+        self.globalpool = nn.AdaptiveAvgPool3d((1, 1, 1))
+        #self.Regressorblock = nn.Conv1d(32, 1, 1,stride=1, padding=0)
+        self.Regressorblock = nn.Conv3d(32, 1, kernel_size=(1, 32, 32), stride=1, padding=0)
         self.dropout = nn.Dropout(0.5)
         self.mlp = nn.Sequential(
             nn.Linear(32, 64),
@@ -248,7 +227,8 @@ class TimeSformer(nn.Module):
         # calculate num patches in height and width dimension, and number of total patches (n)
         
         x = video.permute(0,2,1,3,4)
-        x = self.Stem0(x)
+        x = self.CoarseFeatureCNN(x)
+        x_image = x
         x = x.permute(0,2,1,3,4)
         f = 32
         h = 32
@@ -296,9 +276,13 @@ class TimeSformer(nn.Module):
         
         x = x[:, 1:, :]
         x = self.to_unpatch_embedding(x)
-        x = rearrange(x, 'b (f h w) (p1 p2 c) -> b c f (h p1 w p2)', p1 = 8, p2 = 8, f = 32 , w =4 , h =4 )  
-        x = torch.mean(x,3) 
-        x = self.ConvBlockLast(x) 
+        #x = rearrange(x, 'b (f h w) (p1 p2 c) -> b c f (h p1) (w p2)', p1 = 8, p2 = 8, f = 32 , w =4 , h =4 ) #3D 
+        #x = rearrange(x, 'b (f h w) (p1 p2 c) -> b c f (h p1 w p2)', p1 = 8, p2 = 8, f = 32 , w =4 , h =4 )  #1D
+        x = rearrange(x, 'b (f h w) (p1 p2 c) -> b f c (h p1) (w p2)', p1 = 8, p2 = 8, f = 32 , w =4 , h =4 ) # nothing
+        #x = torch.mean(x,3) #1D
+        #x = self.Regressorblock(x) #1D 3D
+        x = self.globalpool(x) #nothing
+        #print(x.shape)
         x = self.dropout(x)
-        x = x.squeeze(1)
-        return x 
+        x = x.squeeze()
+        return x, x_image
