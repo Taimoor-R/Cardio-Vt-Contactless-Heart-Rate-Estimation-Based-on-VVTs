@@ -1,3 +1,5 @@
+# The trasformer Architecture is adapted and modifed for our Heart rate estiamtion task from the https://github.com/rishikksh20/ViViT-pytorch/blob/master/vivit.py
+
 import torch
 from torch import nn
 
