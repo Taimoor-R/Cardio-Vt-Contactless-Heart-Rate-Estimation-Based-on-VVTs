@@ -2,7 +2,8 @@
 import numpy as np
 import pandas as pd
 import torch
-from evaluation.post_process import *
+import matplotlib.pyplot as plt
+from Evaluator.post_process import *
 
 
 def read_label(dataset):
@@ -34,7 +35,32 @@ def _reform_data_from_dict(data):
     sort_data = [i[1] for i in sort_data]
     sort_data = torch.cat(sort_data, dim=0)
     return np.reshape(sort_data.cpu(), (-1))
+def Scatterplot(path, x,y):
+    rmse = np.sqrt(np.mean(np.square(x - y)))
 
+    # Calculate error bars
+    errors = np.abs(x - y)
+    # Plot scatter with error bars
+    fig, ax = plt.subplots()
+    ax.scatter(x, y, marker='^', c='r', alpha=0.5, label='Predicted')  # Red triangles for predicted
+    ax.scatter(x, x, marker='o', c='b', alpha=0.5, label='Ground truth')  # Blue circles for ground truth
+    ax.errorbar(x, y, xerr=0, yerr=errors, fmt='none', ecolor='gray', alpha=0.5)
+
+    # Add diagonal line
+    lims = [
+        np.min([ax.get_xlim(), ax.get_ylim()]),  # min of both axes
+        np.max([ax.get_xlim(), ax.get_ylim()]),  # max of both axes
+    ]
+    ax.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+
+    # Set axis labels and title
+    ax.set_xlabel('Ground truth heart rate')
+    ax.set_ylabel('Predicted heart rate')
+    ax.set_title('Scatter plot with error bars (RMSE = {:.2f})'.format(rmse))
+
+    # Add legend
+    ax.legend()
+    plt.savefig(path)
 
 def calculate_metrics(predictions, labels, config):
     """Calculate rPPG Metrics (MAE, RMSE, MAPE, Pearson Coef.)."""
@@ -80,12 +106,23 @@ def calculate_metrics(predictions, labels, config):
                 raise ValueError("Your evaluation method is not supported yet! Support FFT and peak detection now ")
 
         elif metric == "RMSE":
+            #
+            # Save the plot to a file
             if config.INFERENCE.EVALUATION_METHOD == "FFT":
                 RMSE_FFT = np.sqrt(np.mean(np.square(predict_hr_fft_all - gt_hr_fft_all)))
                 print("FFT RMSE (FFT Label):{0}".format(RMSE_FFT))
+                x = gt_hr_fft_all  # Ground truth heart rate
+                y = predict_hr_fft_all  # Predicted heart rate
+                Scatterplot("/notebooks/HR-VViT-Contactless-Heart-Rate-Estimation-Based-on-VViTs/Exp1/Scatter_RMSE_FFT.png",x,y)
+                
+
             elif config.INFERENCE.EVALUATION_METHOD == "peak detection":
                 RMSE_PEAK = np.sqrt(np.mean(np.square(predict_hr_peak_all - gt_hr_peak_all)))
                 print("PEAK RMSE (Peak Label):{0}".format(RMSE_PEAK))
+                x = gt_hr_peak_all  # Ground truth heart rate
+                y = predict_hr_peak_all  # Predicted heart rate
+                Scatterplot("/notebooks/HR-VViT-Contactless-Heart-Rate-Estimation-Based-on-VViTs/Exp1/Scatter_RMSE_Peak.png",x,y)
+                
             else:
                 raise ValueError("Your evaluation method is not supported yet! Support FFT and peak detection now ")
 
@@ -102,10 +139,30 @@ def calculate_metrics(predictions, labels, config):
         elif metric == "Pearson":
             if config.INFERENCE.EVALUATION_METHOD == "FFT":
                 Pearson_FFT = np.corrcoef(predict_hr_fft_all, gt_hr_fft_all)
-                print("FFT Pearson (FFT Label):{0}".format(Pearson_FFT[0][1]))
+                Pearson_FFT_value = Pearson_FFT[0][1]
+                print("FFT Pearson (FFT Label):{0}".format(Pearson_FFT_value))
+                fig, ax = plt.subplots()
+                im = ax.imshow(Pearson_FFT, cmap='coolwarm')
+                ax.set_xticks(np.arange(2))
+                ax.set_yticks(np.arange(2))
+                ax.set_xticklabels(['Predicted (FFT)', 'Ground Truth (FFT)'])
+                ax.set_yticklabels(['Predicted (FFT)', 'Ground Truth (FFT)'])
+                plt.colorbar(im)
+                ax.set_title('Pearson Correlation Matrix (Pearson = {:.4f})'.format(Pearson_FFT_value))
+                plt.savefig("/notebooks/HR-VViT-Contactless-Heart-Rate-Estimation-Based-on-VViTs/Exp1/Pearson_FFT.png")
             elif config.INFERENCE.EVALUATION_METHOD == "peak detection":
                 Pearson_PEAK = np.corrcoef(predict_hr_peak_all, gt_hr_peak_all)
-                print("PEAK Pearson  (Peak Label):{0}".format(Pearson_PEAK[0][1]))
+                Pearson_PEAK_value = Pearson_PEAK[0][1]
+                print("PEAK Pearson  (Peak Label):{0}".format(Pearson_PEAK_value))
+                fig, ax = plt.subplots()
+                im = ax.imshow(Pearson_PEAK, cmap='coolwarm')
+                ax.set_xticks(np.arange(2))
+                ax.set_yticks(np.arange(2))
+                ax.set_xticklabels(['Predicted (PEAK)', 'Ground Truth (PEAK)'])
+                ax.set_yticklabels(['Predicted (PEAK)', 'Ground Truth (PEAK)'])
+                plt.colorbar(im)
+                ax.set_title('Pearson Correlation Matrix (Pearson = {:.4f})'.format(Pearson_PEAK_value))
+                plt.savefig("/notebooks/HR-VViT-Contactless-Heart-Rate-Estimation-Based-on-VViTs/Exp1/Pearson_Peak.png")
             else:
                 raise ValueError("Your evaluation method is not supported yet! Support FFT and peak detection now ")
 
