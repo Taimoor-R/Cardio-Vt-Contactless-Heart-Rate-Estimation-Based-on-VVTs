@@ -12,7 +12,7 @@ import Dataset.PURELoader
 import Dataset.UBFCLoader
 from torch.utils.tensorboard import SummaryWriter
 import torchvision.transforms as transforms
-from Models.CardioVTnet import TimeSformer
+from Models.CardioVTnet import CardioVTnet
 from Models.PhysNet import PhysNet
 from torch.utils.data import DataLoader
 from scipy.stats import pearsonr
@@ -221,7 +221,7 @@ if __name__ == '__main__':
     # Print the device being used
     print("Using device:", device)
     
-    model = TimeSformer(
+    model = CardioVTnet(
         dim = 512,
         image_size = 64,
         patch_size = 8,
