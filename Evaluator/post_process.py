@@ -4,7 +4,7 @@ import scipy
 import scipy.io
 from scipy.signal import butter
 from scipy.sparse import spdiags
-
+import matplotlib.pyplot as plt
 
 def _next_power_of_2(x):
     """Calculate the nearest power of 2."""
@@ -41,6 +41,8 @@ def _calculate_fft_hr(ppg_signal, fs=60, low_pass=0.75, high_pass=2.5):
     mask_ppg = np.take(f_ppg, fmask_ppg)
     mask_pxx = np.take(pxx_ppg, fmask_ppg)
     fft_hr = np.take(mask_ppg, np.argmax(mask_pxx, 0))[0] * 60
+    # Calculate power density spectrum
+    f, Pxx = scipy.signal.welch(ppg_signal, fs=fs)
     return fft_hr
 
 
