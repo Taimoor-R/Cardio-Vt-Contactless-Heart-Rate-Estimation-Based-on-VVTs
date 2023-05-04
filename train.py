@@ -13,6 +13,9 @@ import Dataset.UBFCLoader
 from torch.utils.tensorboard import SummaryWriter
 import torchvision.transforms as transforms
 from Models.CardioVTnet import CardioVTnet
+from Models.CardioVT_3D_Regressor import CardioVTnet_3D_Regressor
+from Models.CardioVT_1D_Regressor import CardioVT_1D_Regressor
+from Models.CardioVT_No_Regressor import CardioVTnet_No_Regressor
 from Models.PhysNet import PhysNet
 from torch.utils.data import DataLoader
 from scipy.stats import pearsonr
