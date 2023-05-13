@@ -6,7 +6,7 @@ from multiprocessing import Pool, Process, Value, Array, Manager
 
 import cv2
 import numpy as np
-from Dataset.BaseLoader import BaseLoader
+from dataset.BaseLoader import BaseLoader
 from tqdm import tqdm
 
 
