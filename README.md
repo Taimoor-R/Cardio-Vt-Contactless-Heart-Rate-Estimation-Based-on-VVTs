@@ -68,7 +68,17 @@ Push your changes to your forked repository.
 Submit a pull request, explaining your changes in detail.
 
 ## License
-CardioVt is licensed under the CC-NC. Please see the LICENSE file for more information.
+CardioVt is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) license. This means that you are free to use, modify, and share the code and experiments in this repository under the following conditions:
+
+- Attribution: You must give appropriate credit to the original author(s) and provide a link to the license. You must indicate if any changes were made to the original work.
+
+- NonCommercial: The licensed material can only be used for non-commercial purposes. You cannot use it for commercial gain.
+
+- ShareAlike: If you adapt or modify the licensed material, you must distribute your work under the same license terms as the original.
+
+Please refer to the [License](LICENSE) file in this repository for more detailed information about the license.
+
+It's important to read and understand the full license text to ensure compliance with the licensing terms.
 
 ## Acknowledgements
 We would like to express our gratitude to the following repositories and authors for their valuable contributions and open-source code, which greatly assisted in the development of this project:
