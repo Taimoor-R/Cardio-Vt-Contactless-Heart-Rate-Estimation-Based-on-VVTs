@@ -1,3 +1,4 @@
+# Code is as it is taken from https://github.com/ubicomplab/rPPG-Toolbox
 from collections.abc import Sequence
 import random
 import math
