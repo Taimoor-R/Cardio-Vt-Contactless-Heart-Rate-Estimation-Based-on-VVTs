@@ -45,27 +45,39 @@ To get started with CardioVt, please follow these steps:
   ``` 
   conda activate CardioVt 
   ```
-
-
+  
 ## Usage
 To use Train CardioVt, follow these steps:
 
-[Provide instructions on how to use your project]
+1. Update data paths in the Config.yaml:
+  ``` 
+  DO_PREPROCESS: True            
+  DATA_PATH: "/notebooks/PURE" # add path of your data                    
+  CACHED_PATH: "/notebooks/PURE/PreprocessedData" # add path of where you would like to save preprocessed data
+  ```
+2. Download [Pretrained File](https://www.dropbox.com/s/4roflx4q1gscu85/TimeSformer_divST_32x32_224_HowTo100M.pyth?dl=0) for TimeSformer:
 
-[Add more steps if needed]
+3. Add Path of Pretrained Model path in line [248](https://github.com/Taimoor-R/HR-VViT-Contactless-Heart-Rate-Estimation-Based-on-VViTs/blob/2157b35cd15f75063c3ab33b63adc3501acb8702/train.py#LL248C5-L248C121) of train.py
+
+4. Start training
+  ``` 
+  Python train.py
+  ```
+To use Inference , follow the this [link](https://huggingface.co/spaces/Taimoor-R/CardioVT-APP) to the hugging face spaces deployment
+
 
 ## Contributing
-We welcome contributions from the community. If you want to contribute to CardioVt, please follow these guidelines:
+Contributions from the community are welcomed for CardioVt. If you would like to contribute to the project, please follow these guidelines:
 
-Fork the repository.
+1. Fork the repository.
 
-Create a new branch.
+2. Create a new branch.
 
-Make your changes and commit them with descriptive messages.
+3. Make your changes and commit them with descriptive messages.
 
-Push your changes to your forked repository.
+4. Push your changes to your forked repository.
 
-Submit a pull request, explaining your changes in detail.
+5. Submit a pull request, explaining your changes in detail.
 
 ## License
 CardioVt is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) license. This means that you are free to use, modify, and share the code and experiments in this repository under the following conditions:
@@ -81,7 +93,7 @@ Please refer to the [License](LICENSE) file in this repository for more detailed
 It's important to read and understand the full license text to ensure compliance with the licensing terms.
 
 ## Acknowledgements
-We would like to express our gratitude to the following repositories and authors for their valuable contributions and open-source code, which greatly assisted in the development of this project:
+The development of this project was greatly assisted by the valuable contributions and open-source code from the following repositories and authors. We would like to express our gratitude for their efforts:
 
 1. rPPG-Toolbox by Xin Liu, Xiaoyu Zhang, Girish Narayanswamy, Yuzhe Zhang, Yuntao Wang, Shwetak Patel, and Daniel McDuff. "Deep physiological sensing toolbox." arXiv preprint arXiv:2210.00716 (2022). 
   - https://github.com/ubicomplab/rPPG-Toolbox
@@ -93,7 +105,7 @@ We would like to express our gratitude to the following repositories and authors
 5. ViViT-pytorch by Anurag Arnab, Mostafa Dehghani, Georg Heigold, Chen Sun, Mario Lučić, and Cordelia Schmid. "ViViT: A Video Vision Transformer." arXiv preprint arXiv:2103.15691 (2021).
   - https://github.com/rishikksh20/ViViT-pytorch
 
-We would like to extend our appreciation to these repositories and authors for their valuable resources, which significantly contributed to the success of this project.
+It is important to note that we have made every effort, to the best of our knowledge, to ensure that any works inspired, adapted, or refactored from these code bases have been duly acknowledged in their respective files. The contributions from these repositories and authors have significantly influenced and contributed to the success of this project.
 ## Issues
 ### Git and GPU Notebook intergration
 I faced the issue of Paperspace not properly interacting with git speciffically private github projects, therefore all the commits have been added at a later date while uploading the project to github. Furthermore, due to the nature of the project and experimentation with mulitple models and creation of new model it was not possible to keep a updated git as the objective was not to create a frontend or backend ddevelopment project rather a research. Therefore, due to these reasons the git commits are limited, if required access to Paperspace notebook can be given to see history/images of notebook throughout the project.
