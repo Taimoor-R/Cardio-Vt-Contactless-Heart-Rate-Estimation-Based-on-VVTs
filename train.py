@@ -5,6 +5,7 @@ import torch.nn as nn
 import os
 import numpy as np
 import glob
+import yaml
 import matplotlib.pyplot as plt
 from config import get_config
 import Dataset.BaseLoader
@@ -117,7 +118,7 @@ def train(model, train_loader, val_loader, optimizer, loss_function, twriter, vw
         # Check if this is the best model
         if val_loss < best_loss:
             best_loss = val_loss
-            torch.save(model.state_dict(), 'Exp3/best_trained_timesformer_none.pth')
+            torch.save(model.state_dict(), 'Exp1/best_trained_timesformer_3D.pth')
         
         scheduler.step(val_loss)
         model.train() 
@@ -223,7 +224,8 @@ if __name__ == '__main__':
 
     # Print the device being used
     print("Using device:", device)
-    
+
+    # Get the path to the pretrained weights
     model = CardioVTnet(
         dim = 512,
         image_size = 64,
@@ -239,11 +241,11 @@ if __name__ == '__main__':
 
     #model = PhysNet()
     model = model.to(device)
-    #loss_function = Neg_Pearson()#
-    loss_function = nn.MSELoss(size_average=None, reduce=None, reduction='mean')
+    loss_function = Neg_Pearson()#
+    #loss_function = nn.MSELoss(size_average=None, reduce=None, reduction='mean')
     loss_function = loss_function.to(device)
 
-    pretrained_weights = torch.load('/notebooks/rPPG-Toolbox/neural_methods/model/TimeSformer_divST_8x32_224_K600.pyth')
+    pretrained_weights = torch.load("/notebooks/rPPG-Toolbox/neural_methods/model/TimeSformer_divST_8x32_224_K600.pyth")
     if pretrained_weights:
         model.load_state_dict(pretrained_weights, strict=False)
         print("Pretrained Loaded")
@@ -255,9 +257,9 @@ if __name__ == '__main__':
     # Unfreeze the last few layers
     for param in model.layers.parameters():
         param.requires_grad = True
-    for param in model.Stem0.parameters():
+    for param in model.CoarseFeatureCNN.parameters():
         param.requires_grad = True
-    for param in model.ConvBlockLast.parameters():
+    for param in model.Regressorblock.parameters():
         param.requires_grad = True
     for param in model.to_patch_embedding.parameters():
         param.requires_grad = True
@@ -267,8 +269,8 @@ if __name__ == '__main__':
     # Define learning rates for different parameter groups
     learning_rates = [
         {'params': model.layers.parameters(), 'lr': 0.005},
-        {'params': model.Stem0.parameters(), 'lr': 0.01},
-        {'params': model.ConvBlockLast.parameters(), 'lr': 0.01},
+        {'params': model.CoarseFeatureCNN.parameters(), 'lr': 0.01},
+        {'params': model.Regressorblock.parameters(), 'lr': 0.01},
         {'params': model.to_patch_embedding.parameters(), 'lr': 0.01},
         {'params': model.to_unpatch_embedding.parameters(), 'lr': 0.01},
     ]
@@ -282,7 +284,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     #parser = add_args(parser)
     parser.add_argument('--config_file', required=False,
-                        default="/notebooks/HR-VViT-Contactless-Heart-Rate-Estimation-Based-on-VViTs/config.yaml", type=str, help="The name of the model.")
+                        default="config.yaml", type=str, help="The name of the model.")
     parser = Dataset.BaseLoader.BaseLoader.add_data_loader_args(parser)
     args = parser.parse_args()
     # configurations.
@@ -330,19 +332,19 @@ if __name__ == '__main__':
         worker_init_fn=seed_worker,
         generator=general_generator)
 
-    twriter = SummaryWriter(log_dir='/notebooks/HR-VViT-Contactless-Heart-Rate-Estimation-Based-on-VViTs/Exp3/logs/best_trained_timesformer_train_none')
-    vwriter = SummaryWriter(log_dir='/notebooks/HR-VViT-Contactless-Heart-Rate-Estimation-Based-on-VViTs/Exp3/logs/best_trained_timesformer_val_none')
+    twriter = SummaryWriter(log_dir='Exp1/logs/best_trained_timesformer_train_3D')
+    vwriter = SummaryWriter(log_dir='Exp1/logs/best_trained_timesformer_val_3D')
     # Define the device on which the code should run
     
     # Define the early stopping patience
 
     # Train the model
-    train(model, train_loader, val_loader, optimizer, loss_function, twriter,vwriter)
+    train(model, train_loader, val_loader, optimizer, loss_function, twriter,vwriter, config.TRAIN.EPOCHS)
     print("Training Complete !!!!")
     
     
     # Load the best model from the training process
-    model.load_state_dict(torch.load('/notebooks/HR-VViT-Contactless-Heart-Rate-Estimation-Based-on-VViTs/Exp3/best_trained_timesformer_none.pth'))
+    model.load_state_dict(torch.load('Exp1/best_trained_timesformer_3D.pth'))
     test(model, test_loader, config)
     
 
