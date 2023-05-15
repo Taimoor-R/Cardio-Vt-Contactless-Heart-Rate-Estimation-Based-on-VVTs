@@ -191,7 +191,7 @@ class BaseLoader(Dataset):
         """
 
         detector = cv2.CascadeClassifier(
-            './dataset/haarcascade_frontalface_default.xml')
+            './Dataset/haarcascade_frontalface_default.xml')
         face_zone = detector.detectMultiScale(frame)
         if len(face_zone) < 1:
             print("ERROR: No Face Detected")
