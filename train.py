@@ -226,7 +226,7 @@ if __name__ == '__main__':
     print("Using device:", device)
 
     # Get the path to the pretrained weights
-    model = CardioVTnet(
+    model = CardioVTnet_3D_Regressor(
         dim = 512,
         image_size = 64,
         patch_size = 8,
