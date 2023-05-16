@@ -24,12 +24,14 @@ This project represents a significant contribution to the field of medical compu
 ## Installation
 
 To get started with CardioVt, please follow these steps:
-
-1. Clone the repository:
+1. Request Datasets as an agreement must be signed with the gatekeeper.
+   - Please contact nikr-datasets-request@tu-ilmenau.de for PURE dataset access as mentioned on [link]("https://www.tu-ilmenau.de/en/university/departments/department-of-computer-science-and-automation/profile/institutes-and-groups/institute-of-computer-and-systems-engineering/group-for-neuroinformatics-and-cognitive-robotics/data-sets-code/pulse-rate-detection-dataset-pure")
+   - Please contact yannick.benezeth@u-bourgogne.fr for UBFC dataset access as mentioned on [link](https://sites.google.com/view/ybenezeth/ubfcrppg)
+2. Clone the repository:
   ``` 
   git clone https://github.com/Taimoor-R/Cardio-Vt-Contactless-Heart-Rate-Estimation-Based-on-VVTs.git 
   ```
-2. Install Miniconda (if not already installed):
+3. Install Miniconda (if not already installed):
   ```mkdir -p ~/miniconda3
    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
    bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
@@ -37,11 +39,11 @@ To get started with CardioVt, please follow these steps:
    ~/miniconda3/bin/conda init bash
    ~/miniconda3/bin/conda init zsh
   ```
-3. Install project dependencies and creat virtual env
+4. Install project dependencies and creat virtual env
   ``` 
   python req.py 
   ```
-4. Activate the Conda Env 'CardioVt' we created:
+5. Activate the Conda Env 'CardioVt' we created:
   ``` 
   conda activate CardioVt 
   ```
