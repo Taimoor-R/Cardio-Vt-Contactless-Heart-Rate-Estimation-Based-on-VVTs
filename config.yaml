@@ -3,7 +3,7 @@ BASE: ['']
 TOOLBOX_MODE: "train_and_test"  # "train_and_test"  or "only_test"
 TRAIN:
   BATCH_SIZE: 8
-  EPOCHS: 40
+  EPOCHS: 25
   LR: 0.01
   MODEL_FILE_NAME: PURE_PURE_PURE_physnet_diffnormalized
   DATA:
