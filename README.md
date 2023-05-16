@@ -27,7 +27,7 @@ To get started with CardioVt, please follow these steps:
 
 1. Clone the repository:
   ``` 
-  git clone git@github.com:Taimoor-R/HR-VViT-Contactless-Heart-Rate-Estimation-Based-on-VViTs.git 
+  git clone https://github.com/Taimoor-R/Cardio-Vt-Contactless-Heart-Rate-Estimation-Based-on-VVTs.git 
   ```
 2. Install Miniconda (if not already installed):
   ```mkdir -p ~/miniconda3
