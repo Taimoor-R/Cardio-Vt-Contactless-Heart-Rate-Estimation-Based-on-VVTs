@@ -63,7 +63,7 @@ To use Train CardioVt, follow these steps:
   ``` 
   Python train.py
   ```
-To use Inference , follow the this [link](https://huggingface.co/spaces/Taimoor-R/CardioVT-APP) to the hugging face spaces deployment
+To use Inference , follow the instructions in the Dissertion Report to the hugging face spaces deployment
 
 
 ## Contributing
